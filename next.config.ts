@@ -18,12 +18,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  devIndicators: {
-    buildActivity: false,
-  },
   experimental: {
-    allowedDevOrigins: ["*.cloudworkstations.dev"],
+    // allowedDevOrigins is a top-level property now
   },
+  allowedDevOrigins: ["*.cloudworkstations.dev"],
 };
 
 export default nextConfig;
