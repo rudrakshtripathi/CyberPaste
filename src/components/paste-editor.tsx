@@ -21,7 +21,7 @@ import { ShareDialog } from './share-dialog';
 import { SyntaxFixerButton } from './syntax-fixer-button';
 
 const createNewTab = (): EditorTab => ({
-  id: typeof window !== 'undefined' ? crypto.randomUUID() : '',
+  id: '', 
   name: 'pasty.txt',
   lang: 'plaintext',
   content: '',
@@ -37,13 +37,13 @@ export function PasteEditor() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const initialTab = createNewTab();
+    const initialTab = { ...createNewTab(), id: crypto.randomUUID() };
     setTabs([initialTab]);
     setActiveTab(initialTab.id);
   }, []);
 
   const handleAddTab = () => {
-    const newTab = createNewTab();
+    const newTab = { ...createNewTab(), id: crypto.randomUUID() };
     setTabs([...tabs, newTab]);
     setActiveTab(newTab.id);
   };
