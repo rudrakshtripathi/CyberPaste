@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -112,17 +113,19 @@ export function PasteEditor() {
                     value={tab.id}
                     className="relative data-[state=active]:bg-card/50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
                   >
-                    {tab.name || 'Untitled'}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveTab(tab.id);
-                      }}
-                      className="ml-2 p-0.5 rounded hover:bg-destructive/50"
-                      aria-label={`Remove ${tab.name}`}
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
+                    <div className="flex items-center">
+                      <span>{tab.name || 'Untitled'}</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveTab(tab.id);
+                        }}
+                        className="ml-2 p-0.5 rounded hover:bg-destructive/50"
+                        aria-label={`Remove ${tab.name}`}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
                   </TabsTrigger>
                 ))}
               </TabsList>
