@@ -108,25 +108,24 @@ export function PasteEditor() {
             <div className="flex items-end border-b border-border">
               <TabsList className="bg-transparent p-0 border-0 rounded-none">
                 {tabs.map((tab) => (
-                  <TabsTrigger
-                    key={tab.id}
-                    value={tab.id}
-                    className="relative data-[state=active]:bg-card/50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
-                  >
-                    <div className="flex items-center">
-                      <span>{tab.name || 'Untitled'}</span>
-                      <button
+                  <div key={tab.id} className="relative group">
+                    <TabsTrigger
+                      value={tab.id}
+                      className="pr-8 data-[state=active]:bg-card/50 data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+                    >
+                      {tab.name || 'Untitled'}
+                    </TabsTrigger>
+                     <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleRemoveTab(tab.id);
                         }}
-                        className="ml-2 p-0.5 rounded hover:bg-destructive/50"
+                        className="absolute top-1/2 right-1 -translate-y-1/2 p-0.5 rounded hover:bg-destructive/50 opacity-50 group-hover:opacity-100 transition-opacity"
                         aria-label={`Remove ${tab.name}`}
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
-                    </div>
-                  </TabsTrigger>
+                  </div>
                 ))}
               </TabsList>
               <Button variant="ghost" size="sm" onClick={handleAddTab} className="ml-2 mb-1">
