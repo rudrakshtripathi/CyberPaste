@@ -1,20 +1,15 @@
 import Link from 'next/link';
 import { getActivePasteCount } from '@/lib/actions/paste';
 
-const ASCII_LOGO = `
-█▀▀ █▄ █ █▀▀ █▀▀▀ █▀█   █▀█ ▄▀█ █▀▀ ▀█▀ █▀▀
-██▄ █ ▀█ ██▄ █ ▀█ █▀▄   █▀▀ █▀█ █▄▄  █  ██▄
-`;
-
 export async function Header() {
   const activeCount = await getActivePasteCount();
 
   return (
     <header className="py-2 px-4 md:px-8 border-b border-primary/20 bg-background/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="font-code text-xs leading-tight neon-text flex flex-col justify-center" aria-label="CyberPaste Home">
-            <pre className="hidden md:block">{ASCII_LOGO}</pre>
-            <span className="md:hidden text-2xl font-headline font-bold glitch" data-text="CyberPaste">CyberPaste</span>
+        <Link href="/" className="font-headline text-2xl font-bold neon-text flex flex-col justify-center glitch" data-text="CyberPaste" aria-label="CyberPaste Home">
+            <span className="hidden md:block">CYBER PASTE</span>
+            <span className="md:hidden">CyberPaste</span>
         </Link>
         <div className="flex items-center gap-4">
           <div className="text-center">
