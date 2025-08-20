@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import { getActivePasteCount } from '@/lib/actions/paste';
+import { Github, Linkedin, Briefcase } from 'lucide-react';
+import { Button } from './ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 export async function Header() {
   const activeCount = await getActivePasteCount();
@@ -15,13 +18,57 @@ export async function Header() {
         </div>
 
         <div className="text-center">
-          <Link href="/" className="font-headline text-3xl md:text-4xl font-bold neon-text glitch" data-text="CyberPaste" aria-label="CyberPaste Home">
+          <Link
+            href="/"
+            className="font-headline text-3xl md:text-4xl font-bold neon-text glitch"
+            data-text="CyberPaste"
+            aria-label="CyberPaste Home"
+          >
             CyberPaste
           </Link>
         </div>
 
         <div className="justify-self-end">
-          {/* Placeholder for right-side content if needed */}
+          <TooltipProvider>
+            <div className="flex items-center gap-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" asChild>
+                    <Link href="https://github.com/your-username" target="_blank" aria-label="GitHub Profile">
+                      <Github className="h-5 w-5 text-accent hover:text-primary transition-colors" />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>GitHub</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                   <Button variant="ghost" size="icon" asChild>
+                    <Link href="https://linkedin.com/in/your-profile" target="_blank" aria-label="LinkedIn Profile">
+                      <Linkedin className="h-5 w-5 text-accent hover:text-primary transition-colors" />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>LinkedIn</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                   <Button variant="ghost" size="icon" asChild>
+                    <Link href="https://your-portfolio.com" target="_blank" aria-label="Portfolio Website">
+                      <Briefcase className="h-5 w-5 text-accent hover:text-primary transition-colors" />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Portfolio</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
         </div>
       </div>
     </header>
