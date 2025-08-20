@@ -12,6 +12,7 @@ import { Button } from './ui/button';
 import { base64ToKey, decrypt } from '@/lib/crypto';
 import Link from 'next/link';
 import { CodeHighlighter } from './code-highlighter';
+import { TimeComplexityAnalyzer } from './time-complexity-analyzer';
 
 interface PasteViewerProps {
   paste: StoredPaste;
@@ -111,6 +112,7 @@ export function PasteViewer({ paste }: PasteViewerProps) {
               </CardHeader>
               <CardContent>
                 <CodeHighlighter content={tab.content} language={tab.lang} />
+                <TimeComplexityAnalyzer code={tab.content} language={tab.lang} />
               </CardContent>
             </Card>
           </TabsContent>
