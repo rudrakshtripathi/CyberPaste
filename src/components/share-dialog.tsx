@@ -39,6 +39,10 @@ export function ShareDialog({ url, onOpenChange }: ShareDialogProps) {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  const handleCreateNew = () => {
+    window.location.href = '/';
+  }
+
   return (
     <Dialog open={true} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-card/80 backdrop-blur-sm border-primary/20">
@@ -68,7 +72,7 @@ export function ShareDialog({ url, onOpenChange }: ShareDialogProps) {
                 <QrCode className="mr-2 h-4 w-4"/>
                 {showQr ? "Hide QR Code" : "Show QR Code"}
             </Button>
-            <Button type="button" variant="secondary" onClick={() => window.location.reload()}>
+            <Button type="button" variant="secondary" onClick={handleCreateNew}>
                 Create New Paste
             </Button>
         </DialogFooter>
