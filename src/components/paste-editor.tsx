@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Trash2, WandSparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,26 +20,32 @@ import { encrypt, generateKey, keyToBase64 } from '@/lib/crypto';
 import { ShareDialog } from './share-dialog';
 import { SyntaxFixerButton } from './syntax-fixer-button';
 
-const initialTab: EditorTab = {
-  id: crypto.randomUUID(),
+const createNewTab = (): EditorTab => ({
+  id: typeof window !== 'undefined' ? crypto.randomUUID() : '',
   name: 'pasty.txt',
   lang: 'plaintext',
   content: '',
-};
+});
 
 export function PasteEditor() {
-  const [tabs, setTabs] = useState<EditorTab[]>([initialTab]);
-  const [activeTab, setActiveTab] = useState<string>(initialTab.id);
+  const [tabs, setTabs] = useState<EditorTab[]>([]);
+  const [activeTab, setActiveTab] = useState<string>('');
   const [expiration, setExpiration] = useState<string>(EXPIRATION_OPTIONS[3].value); // Default to 1 Month
   const [isEncrypted, setIsEncrypted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    const initialTab = createNewTab();
+    setTabs([initialTab]);
+    setActiveTab(initialTab.id);
+  }, []);
+
   const handleAddTab = () => {
-    const newTabId = crypto.randomUUID();
-    setTabs([...tabs, { ...initialTab, id: newTabId }]);
-    setActiveTab(newTabId);
+    const newTab = createNewTab();
+    setTabs([...tabs, newTab]);
+    setActiveTab(newTab.id);
   };
 
   const handleRemoveTab = (idToRemove: string) => {
@@ -96,6 +102,10 @@ export function PasteEditor() {
       setIsLoading(false);
     }
   };
+
+  if (tabs.length === 0) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <>
