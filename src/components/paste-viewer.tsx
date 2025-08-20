@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Button } from './ui/button';
 import { base64ToKey, decrypt } from '@/lib/crypto';
 import Link from 'next/link';
+import { CodeHighlighter } from './code-highlighter';
 
 interface PasteViewerProps {
   paste: StoredPaste;
@@ -109,9 +110,7 @@ export function PasteViewer({ paste }: PasteViewerProps) {
                   </div>
               </CardHeader>
               <CardContent>
-                <pre className="bg-black/50 p-4 rounded-md overflow-x-auto text-sm font-code">
-                  <code>{tab.content}</code>
-                </pre>
+                <CodeHighlighter content={tab.content} language={tab.lang} />
               </CardContent>
             </Card>
           </TabsContent>

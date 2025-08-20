@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -21,7 +20,7 @@ import { ShareDialog } from './share-dialog';
 import { SyntaxFixerButton } from './syntax-fixer-button';
 
 const createNewTab = (): EditorTab => ({
-  id: '', 
+  id: crypto.randomUUID(), 
   name: 'pasty.txt',
   lang: 'plaintext',
   content: '',
@@ -33,17 +32,19 @@ export function PasteEditor() {
   const [expiration, setExpiration] = useState<string>(EXPIRATION_OPTIONS[3].value); // Default to 1 Month
   const [isEncrypted, setIsEncrypted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    const initialTab = { ...createNewTab(), id: crypto.randomUUID() };
+    setIsMounted(true);
+    const initialTab = createNewTab();
     setTabs([initialTab]);
     setActiveTab(initialTab.id);
   }, []);
 
   const handleAddTab = () => {
-    const newTab = { ...createNewTab(), id: crypto.randomUUID() };
+    const newTab = createNewTab();
     setTabs([...tabs, newTab]);
     setActiveTab(newTab.id);
   };
@@ -103,7 +104,7 @@ export function PasteEditor() {
     }
   };
 
-  if (tabs.length === 0) {
+  if (!isMounted || tabs.length === 0) {
     return null; // Or a loading spinner
   }
 

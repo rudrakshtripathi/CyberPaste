@@ -2,6 +2,7 @@
 
 import { Check, Copy, QrCode } from 'lucide-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
@@ -30,6 +31,7 @@ export function ShareDialog({ url, onOpenChange }: ShareDialogProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(url)}&bgcolor=121212&color=39FF14&qzone=1`;
 
   const handleCopy = () => {
@@ -40,7 +42,8 @@ export function ShareDialog({ url, onOpenChange }: ShareDialogProps) {
   };
 
   const handleCreateNew = () => {
-    window.location.href = '/';
+    onOpenChange(false);
+    router.push('/');
   }
 
   return (
