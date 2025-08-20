@@ -34,7 +34,7 @@ export async function Header() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="icon" asChild>
-                    <Link href="https://github.com/your-username" target="_blank" aria-label="GitHub Profile">
+                    <Link href="https://github.com/rudrakshtripathi" target="_blank" aria-label="GitHub Profile">
                       <Github className="h-5 w-5 text-accent hover:text-primary transition-colors" />
                     </Link>
                   </Button>
@@ -46,7 +46,7 @@ export async function Header() {
               <Tooltip>
                 <TooltipTrigger asChild>
                    <Button variant="ghost" size="icon" asChild>
-                    <Link href="https://linkedin.com/in/your-profile" target="_blank" aria-label="LinkedIn Profile">
+                    <Link href="https://www.linkedin.com/in/rudraksh--tripathi/" target="_blank" aria-label="LinkedIn Profile">
                       <Linkedin className="h-5 w-5 text-accent hover:text-primary transition-colors" />
                     </Link>
                   </Button>
@@ -58,7 +58,7 @@ export async function Header() {
               <Tooltip>
                 <TooltipTrigger asChild>
                    <Button variant="ghost" size="icon" asChild>
-                    <Link href="https://your-portfolio.com" target="_blank" aria-label="Portfolio Website">
+                    <Link href="https://portfolio-website-woad-tau-82.vercel.app/" target="_blank" aria-label="Portfolio Website">
                       <Briefcase className="h-5 w-5 text-accent hover:text-primary transition-colors" />
                     </Link>
                   </Button>

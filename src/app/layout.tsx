@@ -38,7 +38,7 @@ export default function RootLayout({
           <footer className="py-4 px-4 md:px-8 border-t border-primary/10 text-center text-xs text-muted-foreground">
             <p>
               &copy; {new Date().getFullYear()} CyberPaste. Signal integrity at 99.9%.{' '}
-              <Link href="mailto:contact@cyberpaste.dev" className="text-accent hover:underline">
+              <Link href="https://portfolio-website-woad-tau-82.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
                 Contact
               </Link>
             </p>
