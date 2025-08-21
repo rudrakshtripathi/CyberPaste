@@ -35,11 +35,14 @@ export async function createPaste(
   };
 
   pastes.set(id, newPaste);
+  console.log(pastes);
   revalidatePath('/');
   return { id };
 }
 
 export async function getPaste(id: string): Promise<StoredPaste | null> {
+  console.log(pastes);
+  
   const paste = pastes.get(id);
 
   if (!paste) {
