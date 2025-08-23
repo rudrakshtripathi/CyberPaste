@@ -4,62 +4,87 @@ import { revalidatePath } from 'next/cache';
 import { StoredPaste, StoredTab } from '@/lib/types';
 import { generateId } from '@/lib/utils';
 import { notFound } from 'next/navigation';
+import { getPastesCollection } from '@/lib/lib/mongodb';
+import { ObjectId } from 'mongodb';
 
-// In-memory store for pastes. Resets on server restart.
-const pastes = new Map<string, StoredPaste>();
+// Document shape we store in Mongo
+interface PasteDocument {
+  _id: ObjectId;
+  customId: string;
+  createdAt: Date;
+  expiresAt: Date | null;
+  ttl: number; // seconds, 0 for never
+  views: number;
+  encrypted: boolean;
+  tabs: StoredTab[];
+}
 
-function cleanupExpiredPastes() {
-  const now = Date.now();
-  for (const [id, paste] of pastes.entries()) {
-    if (paste.ttl > 0 && paste.createdAt + paste.ttl * 1000 < now) {
-      pastes.delete(id);
-    }
-  }
+// Convert a PasteDocument from Mongo to a StoredPaste for the app
+function fromDocument(doc: PasteDocument): StoredPaste {
+  return {
+    id: doc.customId,
+    createdAt: doc.createdAt.getTime(),
+    ttl: doc.ttl,
+    views: doc.views,
+    encrypted: doc.encrypted,
+    tabs: doc.tabs,
+  };
 }
 
 export async function createPaste(
   tabs: StoredTab[],
-  ttl: number,
+  ttl: number, // in seconds
   encrypted: boolean
 ): Promise<{ id: string }> {
-  cleanupExpiredPastes();
-
+  const collection = await getPastesCollection();
   const id = generateId();
-  const newPaste: StoredPaste = {
-    id,
-    createdAt: Date.now(),
+  const now = new Date();
+
+  const newPaste: Omit<PasteDocument, '_id'> = {
+    customId: id,
+    createdAt: now,
+    expiresAt: ttl > 0 ? new Date(now.getTime() + ttl * 1000) : null,
     ttl,
     encrypted,
     views: 0,
     tabs,
   };
 
-  pastes.set(id, newPaste);
+  await collection.insertOne({ ...newPaste, _id: new ObjectId() });
+
+  // No need to call cleanup here, Mongo's TTL index handles it automatically.
+  
   revalidatePath('/');
   return { id };
 }
 
 export async function getPaste(id: string): Promise<StoredPaste | null> {
-  const paste = pastes.get(id);
+  const collection = await getPastesCollection();
+  
+  // Mongo's TTL index will have already removed expired documents.
+  // No need for a manual time check here.
+  const doc = await collection.findOneAndUpdate(
+    { customId: id },
+    { $inc: { views: 1 } },
+    { returnDocument: 'after' }
+  );
 
-  if (!paste) {
+  if (!doc) {
     return null;
   }
 
-  const now = Date.now();
-  if (paste.ttl > 0 && paste.createdAt + paste.ttl * 1000 < now) {
-    pastes.delete(id);
-    revalidatePath('/');
-    return null;
-  }
-
-  paste.views += 1;
-  pastes.set(id, paste);
-
-  return { ...paste }; // Return a copy
+  return fromDocument(doc as PasteDocument);
 }
 
 export async function getActivePasteCount(): Promise<number> {
-  cleanupExpiredPastes();
-  return pastes.size;
+  try {
+    const collection = await getPastesCollection();
+    // This will count all non-expired documents.
+    return await collection.countDocuments();
+  } catch (error) {
+    console.error('Failed to get active paste count:', error);
+    // In case of a database connection error, we don't want to crash the whole app.
+    // The header will just show 0 pastes.
+    return 0;
+  }
 }
