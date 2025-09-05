@@ -3,26 +3,18 @@
 import { revalidatePath } from 'next/cache';
 import { StoredPaste, StoredTab } from '@/lib/types';
 import { generateId } from '@/lib/utils';
-import { pastesCollection } from '@/lib/firebase';
-import { FieldValue } from 'firebase-admin/firestore';
+
+// In-memory store for pastes
+const pastes = new Map<string, StoredPaste>();
 
 async function cleanupExpiredPastes() {
   const now = Date.now();
-  const snapshot = await pastesCollection.where('expiresAt', '<', now).get();
-  if (snapshot.empty) {
-    return;
-  }
-  
-  const batch = pastesCollection.firestore.batch();
-  snapshot.docs.forEach(doc => {
-    // We only delete pastes with an expiration (ttl > 0).
-    if (doc.data().ttl > 0) {
-      batch.delete(doc.ref);
+  for (const [id, paste] of pastes.entries()) {
+    if (paste.ttl > 0 && paste.createdAt + paste.ttl * 1000 < now) {
+      pastes.delete(id);
     }
-  });
-  await batch.commit();
+  }
 }
-
 
 export async function createPaste(
   tabs: StoredTab[],
@@ -33,63 +25,42 @@ export async function createPaste(
 
   const id = generateId();
   const now = Date.now();
-  const expiresAt = ttl > 0 ? now + ttl * 1000 : null;
 
-  const newPaste: StoredPaste & { expiresAt: number | null } = {
+  const newPaste: StoredPaste = {
     id,
     createdAt: now,
     ttl,
     encrypted,
     views: 0,
     tabs,
-    expiresAt,
   };
 
-  await pastesCollection.doc(id).set(newPaste);
+  pastes.set(id, newPaste);
   revalidatePath('/');
   return { id };
 }
 
 export async function getPaste(id: string): Promise<StoredPaste | null> {
-  const docRef = pastesCollection.doc(id);
-  const doc = await docRef.get();
+  const paste = pastes.get(id);
 
-  if (!doc.exists) {
+  if (!paste) {
     return null;
   }
 
-  const paste = doc.data() as StoredPaste;
-  
   // Check for expiration
   if (paste.ttl > 0 && paste.createdAt + paste.ttl * 1000 < Date.now()) {
-    // The paste has expired, delete it and return null
-    await docRef.delete();
+    pastes.delete(id); // Clean up expired paste on access
     return null;
   }
-
-  // Increment view count
-  await docRef.update({ views: FieldValue.increment(1) });
   
-  // Return the paste data (views will be the old value, which is fine)
-  return paste;
+  // Increment view count (immutably)
+  const updatedPaste = { ...paste, views: paste.views + 1 };
+  pastes.set(id, updatedPaste);
+
+  return paste; // Return original paste data, view count will be updated on next get
 }
 
 export async function getActivePasteCount(): Promise<number> {
-  try {
     await cleanupExpiredPastes();
-    const snapshot = await pastesCollection.get();
-    // We only count non-expired documents
-    const now = Date.now();
-    let count = 0;
-    snapshot.forEach(doc => {
-        const paste = doc.data() as StoredPaste;
-        if (!paste.ttl || (paste.createdAt + paste.ttl * 1000) > now) {
-            count++;
-        }
-    });
-    return count;
-  } catch (error) {
-    console.error("Failed to get active paste count:", error);
-    return 0; // Return 0 on error to avoid crashing the header
-  }
+    return pastes.size;
 }
