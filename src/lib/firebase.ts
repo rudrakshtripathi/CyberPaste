@@ -21,20 +21,13 @@ function getDb() {
   }
 
   // Initialize the app if it's not already initialized
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId,
-        clientEmail,
-        privateKey: privateKey.replace(/\\n/g, '\n'),
-      }),
-    });
-  } catch (error: any) {
-    // Log the specific initialization error for easier debugging
-    console.error('Firebase admin initialization error:', error.message);
-    // Re-throw to prevent the app from continuing in a broken state
-    throw new Error('Failed to initialize Firebase Admin SDK.');
-  }
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId,
+      clientEmail,
+      privateKey: privateKey.replace(/\\n/g, '\n'),
+    }),
+  });
   
   return admin.firestore();
 }
