@@ -13,6 +13,7 @@ import { base64ToKey, decrypt } from '@/lib/crypto';
 import Link from 'next/link';
 import { CodeHighlighter } from './code-highlighter';
 import { TimeComplexityAnalyzer } from './time-complexity-analyzer';
+import { incrementPasteViews } from '@/lib/actions/paste';
 
 interface PasteViewerProps {
   paste: StoredPaste;
@@ -22,8 +23,15 @@ export function PasteViewer({ paste }: PasteViewerProps) {
   const [decryptedTabs, setDecryptedTabs] = useState<StoredTab[] | null>(paste.encrypted ? null : paste.tabs);
   const [isDecrypting, setIsDecrypting] = useState(paste.encrypted);
   const [decryptionError, setDecryptionError] = useState<string | null>(null);
+  const [viewCount, setViewCount] = useState(paste.views);
   const { toast } = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    incrementPasteViews(paste.id).then(newViews => {
+        setViewCount(newViews);
+    });
+  }, [paste.id]);
 
   useEffect(() => {
     if (paste.encrypted) {
@@ -130,7 +138,7 @@ export function PasteViewer({ paste }: PasteViewerProps) {
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-accent"/><span>Expires: {getExpirationText()}</span></div>
-                <div className="flex items-center gap-2"><Eye className="w-4 h-4 text-accent"/><span>Views: {paste.views}</span></div>
+                <div className="flex items-center gap-2"><Eye className="w-4 h-4 text-accent"/><span>Views: {viewCount}</span></div>
                 <div className="flex items-center gap-2">
                     {paste.encrypted ? <Lock className="w-4 h-4 text-accent"/> : <Unlock className="w-4 h-4 text-muted-foreground"/>}
                     <span>{paste.encrypted ? 'Encrypted' : 'Not Encrypted'}</span>

@@ -54,12 +54,21 @@ export async function getPaste(id: string): Promise<StoredPaste | null> {
     return null;
   }
   
-  // Increment view count (immutably)
-  const updatedPaste = { ...paste, views: paste.views + 1 };
-  pastes.set(id, updatedPaste);
+  return paste;
+}
 
-  revalidatePath('/');
-  return paste; // Return original paste data, view count will be updated on next get
+export async function incrementPasteViews(id: string): Promise<number> {
+    const paste = pastes.get(id);
+    if (!paste) {
+        // This case should ideally not be hit if getPaste is called first.
+        // Silently fail to avoid crashing the client view.
+        return 0;
+    }
+    const updatedPaste = { ...paste, views: paste.views + 1 };
+    pastes.set(id, updatedPaste);
+    revalidatePath('/'); // Revalidate to update active paste count in header
+    revalidatePath(`/p/${id}`); // Revalidate the paste page itself
+    return updatedPaste.views;
 }
 
 export async function getActivePasteCount(): Promise<number> {
