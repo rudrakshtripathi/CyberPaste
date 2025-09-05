@@ -1,3 +1,4 @@
+
 import { config } from 'dotenv';
 config(); // Load environment variables from .env file
 
@@ -11,25 +12,26 @@ function getDb() {
   }
 
   // Check if the required environment variables are set
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
 
-  if (!projectId || !clientEmail || !privateKey) {
+  if (!serviceAccountJson) {
     // Throw an error if credentials are not available, which will be caught by Next.js error boundary
-    throw new Error('Firebase environment variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY) are not set.');
+    throw new Error('Firebase environment variable FIREBASE_SERVICE_ACCOUNT_JSON is not set.');
   }
 
-  // Initialize the app if it's not already initialized
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId,
-      clientEmail,
-      privateKey: privateKey.replace(/\\n/g, '\n'),
-    }),
-  });
-  
-  return admin.firestore();
+  try {
+    const serviceAccount = JSON.parse(serviceAccountJson);
+
+    // Initialize the app if it's not already initialized
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+    
+    return admin.firestore();
+  } catch (error) {
+    console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:", error);
+    throw new Error("The FIREBASE_SERVICE_ACCOUNT_JSON environment variable is not valid JSON.");
+  }
 }
 
 // Export a single instance of the database and collection
