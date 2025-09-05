@@ -50,6 +50,7 @@ export async function getPaste(id: string): Promise<StoredPaste | null> {
   // Check for expiration
   if (paste.ttl > 0 && paste.createdAt + paste.ttl * 1000 < Date.now()) {
     pastes.delete(id); // Clean up expired paste on access
+    revalidatePath('/');
     return null;
   }
   
@@ -57,6 +58,7 @@ export async function getPaste(id: string): Promise<StoredPaste | null> {
   const updatedPaste = { ...paste, views: paste.views + 1 };
   pastes.set(id, updatedPaste);
 
+  revalidatePath('/');
   return paste; // Return original paste data, view count will be updated on next get
 }
 
