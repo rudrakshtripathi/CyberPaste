@@ -1,13 +1,12 @@
+
+'use client';
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'CyberPaste - Cyberpunk Pastebin',
-  description: 'A cyberpunk-themed code sharing website. Create, share, and view pastes anonymously.',
-};
+import React from 'react';
 
 export default function RootLayout({
   children,
@@ -24,6 +23,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <link
+            id="highlight-theme"
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
         />
