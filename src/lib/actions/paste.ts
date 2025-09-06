@@ -47,7 +47,6 @@ export async function createPaste(
     ttl,
     views: 0,
     encrypted,
-    theme: 'atom-one-dark', // Default theme
     created_at: now.toISOString(),
     expires_at: expiresAt ? expiresAt.toISOString() : null,
   });
