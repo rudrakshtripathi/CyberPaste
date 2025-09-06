@@ -1,3 +1,4 @@
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -19,6 +20,7 @@ function mapPasteRow(row: any, tabs: any[]): StoredPaste {
     ttl: row.ttl,
     views: row.views,
     encrypted: row.encrypted,
+    theme: row.theme,
     expiresAt: row.expires_at ? new Date(row.expires_at).getTime() : null,
     tabs: tabs.map((t) => ({
       name: t.name,
@@ -34,7 +36,8 @@ function mapPasteRow(row: any, tabs: any[]): StoredPaste {
 export async function createPaste(
   tabs: StoredTab[],
   ttl: number, // seconds
-  encrypted: boolean
+  encrypted: boolean,
+  theme: string
 ): Promise<{ id: string }> {
   const id = generateId(); // shortid (e.g. nanoid, shortid)
   const now = new Date();
@@ -46,6 +49,7 @@ export async function createPaste(
     ttl,
     views: 0,
     encrypted,
+    theme,
     created_at: now.toISOString(),
     expires_at: expiresAt ? expiresAt.toISOString() : null,
   });
@@ -100,19 +104,26 @@ export async function getPaste(id: string): Promise<StoredPaste | null> {
  */
 export async function incrementPasteViews(id: string): Promise<number> {
   const { error: rpcErr } = await supabase.rpc('increment_views', { paste_id: id });
-  if (rpcErr) throw rpcErr;
+  if (rpcErr) {
+    console.error('Error incrementing views:', rpcErr);
+    // Gracefully fail, but return current views
+  }
 
   const { data, error } = await supabase
     .from('stored_pastes')
     .select('views')
     .eq('id', id)
     .single();
-  if (error || !data) return 0;
 
-  revalidatePath('/');
+  if (error || !data) {
+    console.error('Error fetching views after increment:', error);
+    return 0;
+  }
+
   revalidatePath(`/p/${id}`);
   return data.views;
 }
+
 
 /**
  * Count active (non-expired) pastes

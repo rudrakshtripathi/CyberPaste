@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -32,6 +33,16 @@ export function PasteViewer({ paste }: PasteViewerProps) {
         setViewCount(newViews);
     });
   }, [paste.id]);
+
+  useEffect(() => {
+    if (paste.theme) {
+      const themeLink = document.getElementById('highlight-theme') as HTMLLinkElement | null;
+      if (themeLink) {
+        themeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${paste.theme}.min.css`;
+      }
+    }
+  }, [paste.theme]);
+
 
   useEffect(() => {
     if (paste.encrypted) {
