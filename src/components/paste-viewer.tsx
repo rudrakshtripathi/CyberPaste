@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Head from 'next/head';
 import { Clock, Copy, Download, Eye, File, Hash, Lock, Unlock } from 'lucide-react';
 import { formatDistanceToNow, fromUnixTime } from 'date-fns';
 import { StoredPaste, StoredTab } from '@/lib/types';
@@ -17,7 +18,7 @@ import { TimeComplexityAnalyzer } from './time-complexity-analyzer';
 import { incrementPasteViews } from '@/lib/actions/paste';
 
 interface PasteViewerProps {
-  paste: StoredPaste;
+  paste: StoredPaste & { theme?: string };
 }
 
 export function PasteViewer({ paste }: PasteViewerProps) {
@@ -35,11 +36,9 @@ export function PasteViewer({ paste }: PasteViewerProps) {
   }, [paste.id]);
 
   useEffect(() => {
-    if (paste.theme) {
-      const themeLink = document.getElementById('highlight-theme') as HTMLLinkElement | null;
-      if (themeLink) {
-        themeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${paste.theme}.min.css`;
-      }
+    const themeLink = document.getElementById('highlight-theme') as HTMLLinkElement | null;
+    if (themeLink && paste.theme) {
+      themeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${paste.theme}.min.css`;
     }
   }, [paste.theme]);
 

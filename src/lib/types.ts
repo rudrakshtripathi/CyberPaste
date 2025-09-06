@@ -18,7 +18,6 @@ export type StoredPaste = {
   ttl: number; // seconds, 0 for never
   views: number;
   encrypted: boolean;
-  theme: string;
   tabs: StoredTab[];
   expiresAt: number | null; // timestamp for expiration, null for never
 };

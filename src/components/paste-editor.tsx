@@ -13,7 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { EXPIRATION_OPTIONS, LANGUAGES, HIGHLIGHT_THEMES } from '@/lib/constants';
+import { EXPIRATION_OPTIONS, LANGUAGES } from '@/lib/constants';
 import { createPaste } from '@/lib/actions/paste';
 import { EditorTab } from '@/lib/types';
 import { encrypt, generateKey, keyToBase64 } from '@/lib/crypto';
@@ -32,7 +32,6 @@ export function PasteEditor() {
   const [tabs, setTabs] = useState<EditorTab[]>([]);
   const [activeTab, setActiveTab] = useState<string>('');
   const [expiration, setExpiration] = useState<string>(EXPIRATION_OPTIONS[3].value); // Default to 1 Month
-  const [theme, setTheme] = useState<string>(HIGHLIGHT_THEMES[0].value);
   const [isEncrypted, setIsEncrypted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -46,13 +45,6 @@ export function PasteEditor() {
     setTabs([initialTab]);
     setActiveTab(initialTab.id);
   }, []);
-
-  useEffect(() => {
-    const themeLink = document.getElementById('highlight-theme') as HTMLLinkElement | null;
-    if (themeLink) {
-      themeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${theme}.min.css`;
-    }
-  }, [theme]);
 
   const handleAddTab = () => {
     const newTab = createNewTab();
@@ -97,11 +89,11 @@ export function PasteEditor() {
           }))
         );
         dataToSave = encryptedTabs;
-        const { id } = await createPaste(dataToSave, Number(expiration), true, theme);
+        const { id } = await createPaste(dataToSave, Number(expiration), true);
         const b64Key = await keyToBase64(key);
         url = `/p/${id}#key=${b64Key}`;
       } else {
-        const { id } = await createPaste(dataToSave, Number(expiration), false, theme);
+        const { id } = await createPaste(dataToSave, Number(expiration), false);
         url = `/p/${id}`;
       }
 
@@ -229,21 +221,6 @@ export function PasteEditor() {
                 </SelectTrigger>
                 <SelectContent>
                   {EXPIRATION_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-             <div className="space-y-2">
-              <Label htmlFor="theme">Theme</Label>
-              <Select value={theme} onValueChange={setTheme}>
-                <SelectTrigger id="theme" className="w-full md:w-[180px]">
-                  <SelectValue placeholder="Select theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  {HIGHLIGHT_THEMES.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}
                     </SelectItem>

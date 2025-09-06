@@ -28,13 +28,3 @@ export const EXPIRATION_OPTIONS = [
   { value: '2592000', label: '1 Month' },
   { value: '0', label: 'Never' },
 ];
-
-export const HIGHLIGHT_THEMES = [
-  { value: 'atom-one-dark', label: 'Atom One Dark' },
-  { value: 'github-dark', label: 'GitHub Dark' },
-  { value: 'monokai-sublime', label: 'Monokai Sublime' },
-  { value: 'vs2015', label: 'Visual Studio 2015' },
-  { value: 'xcode', label: 'Xcode' },
-  { value: 'solarized-light', label: 'Solarized Light' },
-  { value: 'googlecode', label: 'Google Code' },
-];

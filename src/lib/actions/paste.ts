@@ -20,7 +20,6 @@ function mapPasteRow(row: any, tabs: any[]): StoredPaste {
     ttl: row.ttl,
     views: row.views,
     encrypted: row.encrypted,
-    theme: row.theme,
     expiresAt: row.expires_at ? new Date(row.expires_at).getTime() : null,
     tabs: tabs.map((t) => ({
       name: t.name,
@@ -36,8 +35,7 @@ function mapPasteRow(row: any, tabs: any[]): StoredPaste {
 export async function createPaste(
   tabs: StoredTab[],
   ttl: number, // seconds
-  encrypted: boolean,
-  theme: string
+  encrypted: boolean
 ): Promise<{ id: string }> {
   const id = generateId(); // shortid (e.g. nanoid, shortid)
   const now = new Date();
@@ -49,7 +47,7 @@ export async function createPaste(
     ttl,
     views: 0,
     encrypted,
-    theme,
+    theme: 'atom-one-dark', // Default theme
     created_at: now.toISOString(),
     expires_at: expiresAt ? expiresAt.toISOString() : null,
   });
