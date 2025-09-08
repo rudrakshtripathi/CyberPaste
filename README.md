@@ -1,5 +1,5 @@
 
-# Project Report: CyberPaste – Secure AI-Powered Pastebin
+# CyberPaste – Secure AI-Powered Pastebin
 
 **Author**: Rudraksh Tripathi | 
 **Date**: August 2, 2024 | 
