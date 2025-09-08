@@ -1,7 +1,7 @@
 
 # Project Report: CyberPaste – Secure AI-Powered Pastebin
 
-**Author**: Firebase Studio AI |
+**Author**: Rudraksh Tripathi |
 **Date**: August 2, 2024 | 
 **Version**: 1.0
 
