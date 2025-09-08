@@ -1,15 +1,8 @@
 
-<<<<<<< HEAD
 # Project Report: CyberPaste – Secure AI-Powered Pastebin
 
-**Author**: Rudraksh Tripathi
+**Author**: Firebase Studio AI
 **Date**: August 2, 2024
-=======
-# CyberPaste – Secure AI-Powered Pastebin
-
-**Author**: Rudraksh Tripathi | 
-**Date**: August 2, 2024 | 
->>>>>>> 8abb560ea55574cb7fe7b894c0a5fbafe6e85806
 **Version**: 1.0
 
 ---
@@ -93,92 +86,6 @@ The system can be described as follows:
 ---
 
 ## 5. Implementation Details
-<<<<<<< HEAD
-Write me a detailed project report on my project titled CyberPaste – Secure AI-Powered Pastebin. The report should be written in a professional and technical manner, covering the following points in detail:
-
-Introduction & Problem Statement
-
-Explain the problems with traditional pastebin platforms (lack of encryption, security risks, no AI assistance, limited collaboration features).
-
-Justify the need for a secure, AI-powered pastebin solution.
-
-Objectives of CyberPaste
-
-End-to-end encrypted pastes.
-
-AI assistance for code explanation, debugging, and optimization.
-
-Authentication and role-based access.
-
-Real-time collaboration.
-
-System Architecture & Workflow
-
-Provide a high-level system architecture diagram (if possible).
-
-Explain the backend, frontend, and database workflow.
-
-Technologies Used
-
-Frontend: Next.js, TypeScript, TailwindCSS
-
-Backend: Supabase (PostgreSQL + Auth)
-
-Hosting/Deployment: Vercel
-
-Additional Tools: CSS modules, JWT authentication, AI APIs (for code assistance)
-
-Implementation Details
-
-Describe authentication & user management flow.
-
-Explain paste creation, encryption, and storage.
-
-Show code snippets for:
-
-User authentication with Supabase
-
-Creating and retrieving encrypted pastes
-
-AI-powered code explanation feature
-
-Key Features
-
-Secure paste sharing (with expiry & access control).
-
-AI assistant for real-time code analysis.
-
-Dark/light mode UI.
-
-User dashboard for managing pastes.
-
-Testing & Validation
-
-Mention unit testing, integration testing, and security validation.
-
-Deployment & Hosting
-
-Describe the deployment process using Vercel.
-
-Configuration of Supabase for database + authentication.
-
-Future Enhancements
-
-Adding syntax highlighting for more programming languages.
-
-Support for collaborative editing (Google Docs style).
-
-Blockchain-based verification for paste authenticity.
-
-Conclusion
-
-Summarize the importance of CyberPaste as a secure and intelligent alternative to traditional pastebin platforms.
-
-Make the report well-structured, formatted with headings and subheadings, technical language, and relevant code snippets where required.
-### 5.1 Client-Side Encryption
-
-Client-side encryption is implemented using the Web Crypto API (`crypto.subtle`).
-=======
 
 ### Introduction & Problem Statement
 - Problems with traditional pastebin platforms:
@@ -235,7 +142,10 @@ Client-side encryption is implemented using the Web Crypto API (`crypto.subtle`)
 
 #### 5.1 Client-Side Encryption
 - Client-side encryption is implemented using the Web Crypto API (`crypto.subtle`).
->>>>>>> 8abb560ea55574cb7fe7b894c0a5fbafe6e85806
+
+### 5.1 Client-Side Encryption
+
+Client-side encryption is implemented using the Web Crypto API (`crypto.subtle`).
 
 **Key Generation & Encryption (`src/lib/crypto.ts`)**:
 ```typescript
