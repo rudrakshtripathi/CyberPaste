@@ -34,7 +34,7 @@ export async function Header() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="icon" asChild>
-                    <Link href="https://github.com/rudrakshtripathi" target="_blank" aria-label="GitHub Profile">
+                    <Link href="https://github.com/rudrakshtripathi/CyberPaste" target="_blank" aria-label="GitHub Profile">
                       <Github className="h-5 w-5 text-accent hover:text-primary transition-colors" />
                     </Link>
                   </Button>
