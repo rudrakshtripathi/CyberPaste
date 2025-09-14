@@ -6,6 +6,7 @@ import { Header } from '@/components/header';
 import Link from 'next/link';
 import React from 'react';
 import Head from 'next/head';
+import { VisitorCounter } from '@/components/visitor-counter';
 
 export const metadata: Metadata = {
   title: 'CyberPaste',
@@ -47,6 +48,7 @@ export default function RootLayout({
                 Contact
               </Link>
             </p>
+            <VisitorCounter />
           </footer>
         </div>
         <Toaster />
