@@ -1,4 +1,3 @@
-
 'use server';
 
 import { createClient } from '@supabase/supabase-js';
@@ -6,6 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_KEY!; // service key (server only)
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+const VISITOR_COUNT_OFFSET = 452;
 
 /**
  * Increment and get visitor count
@@ -23,10 +24,10 @@ export async function getVisitorCount(): Promise<number> {
         
         if (error || !data) {
             console.error('Error fetching visitor count:', error);
-            return 0;
+            return 0 + VISITOR_COUNT_OFFSET;
         }
-        return data.count;
+        return data.count + VISITOR_COUNT_OFFSET;
     }
 
-    return rpcData;
+    return rpcData + VISITOR_COUNT_OFFSET;
 }
