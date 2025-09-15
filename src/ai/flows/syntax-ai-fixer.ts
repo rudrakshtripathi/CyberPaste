@@ -31,10 +31,18 @@ const prompt = ai.definePrompt({
   output: {schema: SyntaxAiFixerOutputSchema},
   prompt: `You are a helpful AI assistant that helps fix syntax errors in code.
 
-You will receive code and the programming language it is written in. You will respond with the fixed code.
+You will receive code and the programming language it is written in.
+Your task is to analyze the provided code and correct any syntax errors you find.
+
+Your response MUST be a valid JSON object that strictly adheres to the provided output schema.
+Do NOT include any extra conversational text, explanations, or markdown formatting in your response.
+The 'fixedCode' field in your JSON output should contain the corrected code as a single, valid JSON string.
 
 Language: {{{language}}}
-Code: {{{code}}}
+Code:
+\`\`\`{{{language}}}
+{{{code}}}
+\`\`\`
 `,
 });
 
