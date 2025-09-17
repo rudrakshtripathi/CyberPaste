@@ -64,9 +64,18 @@ export function ShareDialog({ url, onOpenChange }: ShareDialogProps) {
                     <Label htmlFor="link" className="sr-only">Link</Label>
                     <Input id="link" value={url} readOnly className="font-mono"/>
                 </div>
-                <Button type="button" size="icon" variant="ghost" onClick={handleCopy}>
-                    {isCopied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button type="button" size="icon" variant="ghost" onClick={handleCopy}>
+                          {isCopied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Copy link</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
             </div>
           )}
         </div>
